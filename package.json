@@ -1,0 +1,24 @@
+{
+  "name": "intensso",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ecchiblood/intensso.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ecchiblood/intensso/issues"
+  },
+  "homepage": "https://github.com/Ecchiblood/intensso#readme",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.87.1"
+  }
+}
