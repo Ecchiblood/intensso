@@ -1,46 +1,14 @@
-// netlify/functions/submit-form.js
+// netlify/functions/submit-form/submit-form.js
 
-const handler = async (event) => {
-  try {
-    // Разбираем тело запроса (ожидаем JSON)
-    const data = JSON.parse(event.body);
+import { createClient } from '@supabase/supabase-js';
 
-    // Простая валидация
-    if (!data.name || !data.email || !data.message) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Все поля обязательны' }),
-      };
-    }
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
 
-    // 🔥 Здесь можно:
-    // - сохранить в базу (например, Supabase)
-    // - отправить email (например, через EmailJS или SMTP)
-    // - записать в Google Sheet и т.д.
+const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-    console.log('Получены данные:', data); // Это будет в логах Netlify
-
-    // Отвечаем клиенту
-    return {
-      statusCode: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        // Разрешаем запросы с фронтенда (CORS)
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      },
-      body: JSON.stringify({ success: true, message: 'Спасибо за сообщение!' }),
-    };
-  } catch (error) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Ошибка сервера' }),
-    };
-  }
-};
-
-// Обрабатываем и OPTIONS-запросы (для CORS preflight)
-export default async (event, context) => {
+export async function handler(event, context) {
+  // Обработка CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
@@ -52,5 +20,52 @@ export default async (event, context) => {
       body: '',
     };
   }
-  return handler(event);
-};
+
+  if (event.httpMethod !== 'POST') {
+    return {
+      statusCode: 405,
+      body: JSON.stringify({ error: 'Метод не разрешён' }),
+    };
+  }
+
+  try {
+    const data = JSON.parse(event.body);
+
+    const { name, email, message } = data;
+
+    if (!name || !email || !message) {
+      return {
+        statusCode: 400,
+        body: JSON.stringify({ error: 'Все поля обязательны' }),
+      };
+    }
+
+    // Сохраняем в Supabase
+    const { error } = await supabase
+      .from('messages')
+      .insert([{ name, email, message }]);
+
+    if (error) {
+      console.error('Supabase error:', error);
+      return {
+        statusCode: 500,
+        body: JSON.stringify({ error: 'Не удалось сохранить данные' }),
+      };
+    }
+
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ success: true, message: 'Спасибо! Ваше сообщение сохранено.' }),
+    };
+  } catch (err) {
+    console.error('Ошибка:', err);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Внутренняя ошибка сервера' }),
+    };
+  }
+}
