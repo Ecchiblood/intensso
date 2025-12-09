@@ -43,7 +43,8 @@
                     <p><strong>Все поля обязательны для заполнения</strong></p>
                 </div>
                 
-                <form id="booking-form" class="booking-form" action="booking-confirmation.html" method="GET" onsubmit="return validateForm()">
+                <!-- Форма без action/method — обрабатывается JS -->
+                <form id="booking-form" class="booking-form">
                     <div class="form-row">
                         <div class="form-group">
                             <label for="name">Имя *</label>
@@ -224,59 +225,95 @@
     <script>
         // Инициализация
         document.addEventListener('DOMContentLoaded', function() {
-            // Установка текущего года
             document.getElementById('year').textContent = new Date().getFullYear();
             
-            // Установка минимальной даты для бронирования (сегодня)
             const today = new Date().toISOString().split('T')[0];
             const dateField = document.getElementById('date');
             if (dateField) {
                 dateField.min = today;
-                
-                // Установка максимальной даты (через 3 месяца)
                 const maxDate = new Date();
                 maxDate.setMonth(maxDate.getMonth() + 3);
                 dateField.max = maxDate.toISOString().split('T')[0];
             }
         });
-        
-        // Валидация формы
-        function validateForm() {
+
+        // Функция звонка
+        function callRestaurant() {
+            window.location.href = 'tel:+74951234567';
+        }
+
+        // Обработка отправки формы
+        document.getElementById('booking-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            // Валидация (повторяем логику из старой validateForm)
             const dateField = document.getElementById('date');
             const timeField = document.getElementById('time');
             const emailField = document.getElementById('email');
-            
+
             if (dateField.value) {
                 const selectedDate = new Date(dateField.value);
                 const today = new Date();
                 today.setHours(0, 0, 0, 0);
-                
                 if (selectedDate < today) {
                     alert('Пожалуйста, выберите дату не раньше сегодняшнего дня.');
-                    return false;
+                    return;
                 }
             }
-            
+
             if (timeField.value) {
                 const [hours, minutes] = timeField.value.split(':').map(Number);
                 if (hours < 12 || hours >= 23) {
                     alert('Пожалуйста, выберите время между 12:00 и 23:00.');
-                    return false;
+                    return;
                 }
             }
-            
-            if (emailField.value && !emailField.value.includes('@')) {
+
+            const email = emailField.value.trim();
+            if (!email || !email.includes('@')) {
                 alert('Пожалуйста, введите корректный email адрес.');
-                return false;
+                return;
             }
-            
-            return true;
-        }
-        
-        // Звонок в ресторан
-        function callRestaurant() {
-            window.location.href = 'tel:+74951234567';
-        }
+
+            // Сбор всех данных формы
+            const formData = {
+                name: document.getElementById('name').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                email: email,
+                guests: parseInt(document.getElementById('guests').value, 10),
+                date: dateField.value,
+                time: timeField.value,
+                table_type: document.getElementById('table-type').value || 'standard',
+                special_requests: document.getElementById('special-requests').value.trim() || '',
+                newsletter: document.getElementById('newsletter').checked
+            };
+
+            // Проверка обязательных полей
+            if (!formData.name || !formData.phone || !formData.guests || !formData.date || !formData.time) {
+                alert('Пожалуйста, заполните все обязательные поля.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/.netlify/functions/submit-booking', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Успешно → переходим на страницу подтверждения
+                    window.location.href = 'booking-confirmation.html';
+                } else {
+                    alert('Ошибка: ' + (result.error || 'Не удалось отправить бронирование.'));
+                }
+            } catch (err) {
+                console.error('Ошибка отправки:', err);
+                alert('Не удалось отправить форму. Проверьте соединение с интернетом.');
+            }
+        });
     </script>
 </body>
 </html>
