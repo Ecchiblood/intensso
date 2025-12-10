@@ -66,7 +66,7 @@ exports.handler = async function(event, context) {
 
         // Подготовка данных для вставки
         const bookingData = {
-            customer_name: formData.name,
+            name: formData.name,
             phone: formData.phone,
             email: formData.email,
             guests: parseInt(formData.guests, 10),
