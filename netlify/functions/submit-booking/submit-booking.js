@@ -1,106 +1,127 @@
-// netlify/functions/submit-booking/submit-booking.js
+const { createClient } = require('@supabase/supabase-js');
 
-import { createClient } from '@supabase/supabase-js';
-
-// Получаем переменные из Netlify Environment
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Ошибка: SUPABASE_URL или SUPABASE_ANON_KEY не заданы');
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
-
-export async function handler(event, context) {
-  // CORS preflight
-  if (event.httpMethod === 'OPTIONS') {
-    return {
-      statusCode: 200,
-      headers: {
+exports.handler = async function(event, context) {
+    // Настройка CORS
+    const headers = {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
-      },
-      body: '',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Content-Type': 'application/json'
     };
-  }
 
-  // Только POST
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: 'Метод не разрешён' }),
-    };
-  }
-
-  try {
-    const data = JSON.parse(event.body);
-
-    const {
-      name,
-      phone,
-      email,
-      guests,
-      date,
-      time,
-      table_type = 'standard',
-      special_requests = '',
-      newsletter = false
-    } = data;
-
-    // Валидация (дублируем логику фронтенда на сервере — обязательно!)
-    if (!name || !phone || !email || !guests || !date || !time) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Все обязательные поля должны быть заполнены' }),
-      };
+    // Обработка preflight запросов
+    if (event.httpMethod === 'OPTIONS') {
+        return {
+            statusCode: 200,
+            headers
+        };
     }
 
-    // Проверка email формата (простая)
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Некорректный email' }),
-      };
+    if (event.httpMethod !== 'POST') {
+        return {
+            statusCode: 405,
+            headers,
+            body: JSON.stringify({ error: 'Method not allowed' })
+        };
     }
 
-    // Проверка guests: должно быть число от 1 до 10
-    if (typeof guests !== 'number' || guests < 1 || guests > 10) {
-      return {
-        statusCode: 400,
-        body: JSON.stringify({ error: 'Количество гостей должно быть от 1 до 10' }),
-      };
-    }
-
-    // Сохраняем в таблицу `bookings`
-    const { error } = await supabase
-      .from('bookings')
-      .insert([
-        {
-          name,
-          phone,
-          email,
-          guests,
-          date,        // тип: date
-          time,        // тип: time
-          table_type,
-          special_requests,
-          newsletter
+    try {
+        // Получаем данные из тела запроса
+        const formData = JSON.parse(event.body);
+        
+        console.log('Received form data:', formData);
+        
+        // Валидация данных
+        if (!formData.name || !formData.phone || !formData.email || 
+            !formData.guests || !formData.date || !formData.time) {
+            return {
+                statusCode: 400,
+                headers,
+                body: JSON.stringify({ 
+                    error: 'Missing required fields',
+                    receivedData: formData 
+                })
+            };
         }
-      ]);
 
-    if (error) {
-      console.error('Ошибка Supabase:', error);
-      return {
-        statusCode: 500,
-        body: JSON.stringify({ error: 'Не удалось сохранить бронирование' }),
-      };
-    }
-    const bookingId = `BK-${data.id.toString().padStart(6, '0')}`;
-    // Успех
-    return {
+        // Подключаемся к Supabase
+        const supabaseUrl = process.env.SUPABASE_URL;
+        const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY;
+        
+        if (!supabaseUrl || !supabaseServiceKey) {
+            console.error('Supabase credentials missing');
+            return {
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({ 
+                    error: 'Server configuration error',
+                    message: 'Supabase credentials not configured' 
+                })
+            };
+        }
+
+        console.log('Connecting to Supabase...');
+        const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+        // Подготовка данных для вставки
+        const bookingData = {
+            customer_name: formData.name,
+            phone: formData.phone,
+            email: formData.email,
+            guests: parseInt(formData.guests, 10),
+            booking_date: formData.date,
+            booking_time: formData.time,
+            table_type: formData.table_type || 'standard',
+            special_requests: formData.special_requests || null,
+            newsletter: formData.newsletter || false,
+            status: 'confirmed'
+        };
+
+        console.log('Inserting booking data:', bookingData);
+
+        // Сохраняем запись в базу данных
+        const { data, error } = await supabase
+            .from('bookings')
+            .insert([bookingData])
+            .select('id') // Возвращаем только ID вставленной записи
+            .single(); // Получаем одну запись
+
+        if (error) {
+            console.error('Supabase insert error:', error);
+            return {
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({ 
+                    success: false,
+                    error: 'Database error',
+                    message: error.message,
+                    details: error.details,
+                    hint: error.hint
+                })
+            };
+        }
+
+        // Проверяем, что данные вернулись
+        if (!data || !data.id) {
+            console.error('No data returned from insert:', data);
+            return {
+                statusCode: 500,
+                headers,
+                body: JSON.stringify({ 
+                    success: false,
+                    error: 'No data returned',
+                    message: 'Database did not return inserted record ID'
+                })
+            };
+        }
+
+        console.log('Insert successful, returned data:', data);
+        
+        // Форматируем bookingId
+        const bookingId = `BK-${data.id.toString().padStart(6, '0')}`;
+
+        // Возвращаем успешный ответ
+        return {
             statusCode: 200,
             headers,
             body: JSON.stringify({
@@ -109,14 +130,22 @@ export async function handler(event, context) {
                 bookingId: bookingId,
                 dbId: data.id, // Реальный ID из таблицы базы данных
                 record: data
-            }),
-      body: JSON.stringify({ success: true, message: 'Бронирование успешно отправлено' }),
-    };
-  } catch (err) {
-    console.error('Ошибка обработки запроса:', err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: 'Внутренняя ошибка сервера' }),
-    };
-  }
-}
+            })
+        };
+        
+    } catch (error) {
+        console.error('Unexpected error in submit-booking:', error);
+        console.error('Error stack:', error.stack);
+        
+        return {
+            statusCode: 500,
+            headers,
+            body: JSON.stringify({ 
+                success: false,
+                error: 'Internal server error',
+                message: error.message,
+                stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+            })
+        };
+    }
+};
