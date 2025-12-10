@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Подтверждение бронирования - Intensso</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .confirmation-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            text-align: center;
+        }
+        
+        .success-icon {
+            font-size: 5rem;
+            color: #2ecc71;
+            margin-bottom: 30px;
+        }
+        
+        .confirmation-message {
+            background-color: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 40px;
+        }
+        
+        .confirmation-details {
+            background-color: #f8f5f0;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .detail-label {
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .detail-value {
+            color: #1a1a1a;
+        }
+        
+        .confirmation-actions {
+            margin-top: 40px;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .warning-note {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .home-link {
+            background-color: #c9a66d;
+            color: #1a1a1a;
+            padding: 15px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            display: inline-block;
+        }
+        
+        .home-link:hover {
+            background-color: #b89457;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .error-message {
+            background-color: #fee;
+            border: 1px solid #fcc;
+            color: #c00;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Хедер -->
+    <header>
+        <div class="container header-content">
+            <a href="index.html" class="logo">Intens<span>so</span></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html#menu">Меню</a></li>
+                    <li><a href="booking.html">Бронирование</a></li>
+                    <li><a href="index.html#about">О нас</a></li>
+                    <li><a href="index.html#contact">Контакты</a></li>
+                </ul>
+            </nav>
+            <a href="booking.html" class="cta-button">Забронировать стол</a>
+        </div>
+    </header>
+    
+    <div class="container" style="margin: 20px 0;">
+        <nav class="breadcrumbs">
+            <a href="index.html">Главная</a> &gt; 
+            <a href="booking.html">Бронирование</a> &gt;
+            <span>Подтверждение</span>
+        </nav>
+    </div>
+    
+    <!-- Основной контент -->
+    <div class="container">
+        <div id="confirmation-content" class="confirmation-container">
+            <div class="loading">
+                <p>Загрузка информации о бронировании...</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Intensso</h3>
+                    <p>Ресторан итальянской кухни премиум-класса в центре Москвы.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Быстрые ссылки</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html#menu">Меню</a></li>
+                        <li><a href="booking.html">Бронирование</a></li>
+                        <li><a href="index.html#about">О нас</a></li>
+                        <li><a href="index.html#contact">Контакты</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Контакты</h3>
+                    <p><i class="fas fa-phone"></i> +7 (495) 123-45-67</p>
+                    <p><i class="fas fa-envelope"></i> booking@intensso.ru</p>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; <span id="year">2023</span> Ресторан Intensso. Все права защищены.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Устанавливаем текущий год
+            document.getElementById('year').textContent = new Date().getFullYear();
+            
+            // Загружаем данные бронирования
+            loadBookingData();
+        });
+        
+        async function loadBookingData() {
+            const container = document.getElementById('confirmation-content');
+            
+            try {
+                // Получаем параметры из URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const bookingId = urlParams.get('bookingId');
+                const dbId = urlParams.get('dbId');
+                
+                // Пробуем получить данные из localStorage
+                const savedData = localStorage.getItem('lastBooking');
+                
+                if (!savedData) {
+                    showError('Данные бронирования не найдены. Пожалуйста, заполните форму заново.');
+                    return;
+                }
+                
+                const bookingData = JSON.parse(savedData);
+                
+                // Проверяем соответствие ID
+                if (bookingId && bookingData.bookingId !== bookingId) {
+                    showError('Данные бронирования не совпадают. Пожалуйста, заполните форму заново.');
+                    return;
+                }
+                
+                // Отображаем данные
+                displayConfirmation(bookingData);
+                
+            } catch (error) {
+                console.error('Ошибка загрузки данных:', error);
+                showError('Произошла ошибка при загрузке данных бронирования.');
+            }
+        }
+        
+        function displayConfirmation(data) {
+            const container = document.getElementById('confirmation-content');
+            
+            // Функция для форматирования даты
+            const formatDate = (dateStr) => {
+                if (!dateStr) return 'не указана';
+                try {
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('ru-RU', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                } catch (error) {
+                    return dateStr;
+                }
+            };
+            
+            // Функция для форматирования времени
+            const formatTime = (timeStr) => {
+                if (!timeStr) return 'не указано';
+                return timeStr;
+            };
+            
+            container.innerHTML = `
+                <div class="success-icon">✓</div>
+                
+                <div class="confirmation-message">
+                    <h1 class="section-title" style="margin-top: 0;">Спасибо за выбор нашего ресторана!</h1>
+                    
+                    <p style="font-size: 1.2rem; margin-bottom: 30px;">
+                        Ваше бронирование успешно подтверждено. Мы подготовим для вас лучший столик и создадим неповторимую атмосферу.
+                    </p>
+                    
+                    <div class="confirmation-details">
+                        <h3 style="margin-bottom: 20px; color: #1a1a1a; text-align: center;">Детали бронирования</h3>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Номер брони:</span>
+                            <span class="detail-value">${data.bookingId || 'Не указан'}</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Имя:</span>
+                            <span class="detail-value">${data.name || 'Не указано'}</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Телефон:</span>
+                            <span class="detail-value">${data.phone || 'Не указан'}</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Email:</span>
+                            <span class="detail-value">${data.email || 'Не указан'}</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Дата:</span>
+                            <span class="detail-value">${formatDate(data.date)}</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Время:</span>
+                            <span class="detail-value">${formatTime(data.time)}</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Количество гостей:</span>
+                            <span class="detail-value">${data.guests || '2'} человека</span>
+                        </div>
+                        
+                        ${data.table_type ? `
+                        <div class="detail-item">
+                            <span class="detail-label">Тип столика:</span>
+                            <span class="detail-value">${getTableTypeLabel(data.table_type)}</span>
+                        </div>
+                        ` : ''}
+                        
+                        ${data.special_requests ? `
+                        <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #ddd;">
+                            <strong>Особые пожелания:</strong>
+                            <p style="margin-top: 5px;">${data.special_requests}</p>
+                        </div>
+                        ` : ''}
+                        
+                        <div style="margin-top: 25px; padding-top: 25px; border-top: 1px dashed #ddd; text-align: center;">
+                            <p style="font-size: 1.3rem; color: #c9a66d; font-weight: bold;">
+                                Будем ждать вас ${formatDate(data.date)} в ${formatTime(data.time)}!
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div style="background-color: #e8f5e9; padding: 20px; border-radius: 10px; margin-top: 30px;">
+                        <h3 style="color: #2e7d32; margin-bottom: 15px;">✓ Информация отправлена</h3>
+                        <p>
+                            Подтверждение бронирования и все детали отправлены на ваш email: 
+                            <strong>${data.email || 'Не указан'}</strong>
+                        </p>
+                        <p style="margin-top: 10px; font-size: 0.9rem;">
+                            Пожалуйста, проверьте папку "Спам", если не нашли наше письмо в основной почте.
+                        </p>
+                    </div>
+                    
+                    <div class="warning-note">
+                        <p><strong>Важно:</strong> Пожалуйста, приходите за 5-10 минут до назначенного времени. 
+                        При опоздании более чем на 15 минут бронь будет аннулирована.</p>
+                    </div>
+                </div>
+                
+                <div class="confirmation-actions">
+                    <a href="index.html" class="home-link">Перейти на главную страницу</a>
+                    
+                    <button class="cta-button" onclick="sendReminder()">Отправить напоминание</button>
+                    
+                    <button class="order-button" onclick="printConfirmation()">Распечатать подтверждение</button>
+                </div>
+                
+                <div style="margin-top: 40px; color: #666; font-size: 0.9rem;">
+                    <p>Если у вас есть вопросы, звоните: +7 (495) 123-45-67</p>
+                    <p>Или пишите на: booking@intensso.ru</p>
+                </div>
+            `;
+        }
+        
+        function getTableTypeLabel(tableType) {
+            const tableTypes = {
+                'standard': 'Стандартный',
+                'window': 'У окна',
+                'vip': 'VIP зона'
+            };
+            return tableTypes[tableType] || tableType;
+        }
+        
+        function showError(message) {
+            const container = document.getElementById('confirmation-content');
+            container.innerHTML = `
+                <div class="error-message">
+                    <h2 style="color: #c00;">Ошибка</h2>
+                    <p>${message}</p>
+                    <div style="margin-top: 20px;">
+                        <a href="booking.html" class="cta-button">Вернуться к бронированию</a>
+                        <a href="index.html" class="order-button" style="margin-left: 10px;">На главную</a>
+                    </div>
+                </div>
+            `;
+        }
+        
+        function sendReminder() {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.textContent = 'Отправка...';
+            btn.disabled = true;
+            
+            // Имитация отправки
+            setTimeout(() => {
+                btn.textContent = 'Напоминание отправлено!';
+                btn.style.backgroundColor = '#2ecc71';
+                
+                // Возвращаем исходное состояние через 3 секунды
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.disabled = false;
+                    btn.style.backgroundColor = '';
+                }, 3000);
+            }, 1500);
+        }
+        
+        function printConfirmation() {
+            window.print();
+        }
+    </script>
+</body>
+</html>

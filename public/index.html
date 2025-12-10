@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Intensso - Ресторан итальянской кухни</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+   
+    <header>
+        <div class="container header-content">
+            <a href="index.html" class="logo">Intens<span>so</span></a>
+            <nav>
+                <ul>
+                    <li><a href="index.html#menu">Меню</a></li>
+                    <li><a href="booking.html">Бронирование</a></li>
+                    <li><a href="index.html#about">О нас</a></li>
+                    <li><a href="index.html#contact">Контакты</a></li>
+                </ul>
+            </nav>
+            <a href="booking.html" class="cta-button">Забронировать стол</a>
+        </div>
+    </header>
+    
+    <!-- descrition -->
+    <section class="hero">
+        <div class="container">
+            <h1>Искусство итальянской кухни</h1>
+            <p>Ресторан Intensso предлагает аутентичные блюда итальянской кухни, приготовленные шеф-поваром с мишленовским опытом. Насладитесь неповторимой атмосферой и изысканными вкусами.</p>
+            <a href="index.html#menu" class="cta-button" style="margin-right: 15px;">Смотреть меню</a>
+            <a href="booking.html" class="cta-button">Забронировать онлайн</a>
+        </div>
+    </section>
+    
+    <!--history-->
+    <div class="container">
+        <h2 class="section-title" id="about">О ресторане</h2>
+        
+        <div class="about-section">
+            <div class="about-image">
+                🍷
+            </div>
+            <div class="about-content">
+                <h3>Наша история</h3>
+                <p>Ресторан Intensso открыл свои двери в 2010 году и с тех пор стал одним из самых любимых мест для ценителей итальянской кухни в Москве. Наш шеф-повар, Марио Росси, прошел обучение в лучших ресторанах Италии и привнес в меню аутентичные рецепты своей родины.</p>
+                <p>Мы гордимся использованием только свежих и качественных продуктов, многие из которых импортируются напрямую из Италии.</p>
+                <p>Наша команда состоит из 25 профессионалов, которые работают вместе уже более 5 лет.</p>
+            </div>
+        </div>
+    </div>
+    
+   <!--menu-->
+    <div class="container">
+        <h2 class="section-title" id="menu">Наше меню</h2>
+        
+        <div class="menu-grid">
+            
+            <div class="menu-item">
+                <div class="menu-item-image" aria-label="Паста Карбонара">
+                    <img src="images\carbonara.png" height="380" alt="Паста Карбонара">
+                </div>
+                <div class="menu-item-content">
+                    <div class="menu-item-title">
+                        <h3>Паста Карбонара</h3>
+                        <span class="menu-item-price">890 ₽</span>
+                    </div>
+                    <p>Классическая паста с гуанчиале, яйцами, сыром пекорино и черным перцем.</p>
+                    <button class="order-button" onclick="orderItem('Паста Карбонара', 890)" disabled>Заказать</button>
+                </div>
+            </div>
+            
+            
+            <div class="menu-item">
+                <div class="menu-item-image" aria-label="Пицца Маргарита">
+                    <img src="https://static.tildacdn.com/tild6164-6239-4561-a130-376437623033/_.png">
+                </div>
+                <div class="menu-item-content">
+                    <div class="menu-item-title">
+                        <h3>Пицца Маргарита</h3>
+                        <span class="menu-item-price">950 ₽</span>
+                    </div>
+                    <p>Тонкое тесто, соус из свежих томатов, моцарелла и базилик.</p>
+                    <button class="order-button" onclick="orderItem('Пицца Маргарита', 950)" disabled>Заказать</button>
+                </div>
+            </div>
+            
+           
+            <div class="menu-item">
+                <div class="menu-item-image" aria-label="Филе-миньон">
+                    <img src="images\minion.jpg" height="380" alt="Филе Миньон">
+                </div>
+                <div class="menu-item-content">
+                    <div class="menu-item-title">
+                        <h3>Филе-миньон</h3>
+                        <span class="menu-item-price">1850 ₽</span>
+                    </div>
+                    <p>Говяжья вырезка с трюфельным пюре и овощами гриль.</p>
+                    <button class="order-button" onclick="orderItem('Филе-миньон', 1850)" disabled>Заказать</button>
+                </div>
+            </div>
+            
+            
+            <div class="menu-item">
+                <div class="menu-item-image" aria-label="Тирамису">
+                    <img src="images\tiramisu.png" height="380" alt="Тирамису">
+                </div>
+                <div class="menu-item-content">
+                    <div class="menu-item-title">
+                        <h3>Тирамису</h3>
+                        <span class="menu-item-price">650 ₽</span>
+                    </div>
+                    <p>Классический итальянский десерт с маскарпоне и кофе.</p>
+                    <button class="order-button" onclick="orderItem('Тирамису', 650)" disabled>Заказать</button>
+                </div>
+            </div>
+            
+           
+            <div class="menu-item">
+                <div class="menu-item-image" aria-label="Равиоли с трюфелем">
+                    <img src="images\raviolly.png" height="380" alt="Равиолли">
+                </div>
+                <div class="menu-item-content">
+                    <div class="menu-item-title">
+                        <h3>Равиоли с трюфелем</h3>
+                        <span class="menu-item-price">1200 ₽</span>
+                    </div>
+                    <p>Домашние равиоли с начинкой из рикотты и трюфельным соусом.</p>
+                    <button class="order-button" onclick="orderItem('Равиоли с трюфелем', 1200)" disabled>Заказать</button>
+                </div>
+            </div>
+            
+           
+            <div class="menu-item">
+                <div class="menu-item-image" aria-label="Салат Капрезе">
+                    <img src="images\kaprese.png" height="380" alt="Салат">
+                </div>
+                <div class="menu-item-content">
+                    <div class="menu-item-title">
+                        <h3>Салат Капрезе</h3>
+                        <span class="menu-item-price">750 ₽</span>
+                    </div>
+                    <p>Свежие томаты, моцарелла, базилик и оливковое масло.</p>
+                    <button class="order-button" onclick="orderItem('Салат Капрезе', 750)" disabled>Заказать</button>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin: 40px 0;">
+            <a href="menu-full.html" class="cta-button">Посмотреть полное меню</a>
+        </div>
+    </div>
+    
+    <!-- contacts -->
+    <div class="container">
+        <h2 class="section-title" id="contact">Контакты</h2>
+        
+        <div class="contact-info">
+            <div class="contact-card">
+                <h3>Адрес</h3>
+                <p>Москва, ул. Тверская, д. 10</p>
+                <p>Ближайшее метро: Тверская</p>
+                <p>Парковка доступна</p>
+                <button class="order-button" style="margin-top: 10px;" onclick="openMap()">Построить маршрут</button>
+            </div>
+            
+            <div class="contact-card">
+                <h3>Часы работы</h3>
+                <p>Пн-Чт: 12:00 - 23:00</p>
+                <p>Пт-Сб: 12:00 - 00:00</p>
+                <p>Вс: 12:00 - 22:00</p>
+                <p>Бронь столов заканчивается за час до закрытия</p>
+            </div>
+            
+            <div class="contact-card">
+                <h3>Контакты</h3>
+                <p>Телефон: +7 (495) 123-45-67</p>
+                <p>Email: info@intensso.ru</p>
+                <p>Instagram: @intensso_rest</p>
+                <button class="order-button" style="margin-top: 10px;" onclick="sendMessage()">Написать сообщение</button>
+            </div>
+        </div>
+        
+        <!-- map -->
+        <!-- <div class="about-section">
+            <div style="background-color: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #666">
+                <div>
+                    <div>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1456.2426167811054!2d100.20418355348497!3d64.27524528455375!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ca2bca49045b1a5%3A0xed55e495f1ebe43d!2z0JrRgNCw0YHQvdC-0Y_RgNGB0LrQsNGPINGD0LsuLCAyLCDQotGD0YDQsCwg0JrRgNCw0YHQvdC-0Y_RgNGB0LrQuNC5INC60YDQsNC5LCA2NDgwMDA!5e0!3m2!1sru!2sru!4v1765371779443!5m2!1sru!2sru" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                    <p>Москва, ул. Тверская, д. 10</p>
+                </div>
+                <div style="margin: 10px">
+                    <p style="font-size: 20px"><b>Как нас найти?</b></p>
+                    <p style="font-size: 16px">Вход со стороны ул. Тверская, через парковку, по соседству с рестораном магазин "Пятерочка" и парикмахерский салон "Дюймовочка Luxe". Ресторан оборудован сплит-системой, гардеробом, уборной, панорамными окнами и вторым этажом с выходом на терассу</p>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="container">
+        <h2 class="section-title" id="about">О ресторане</h2>
+        <div class="about-section" style="border: 10px">
+            <div class="about-image">
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1456.2426167811054!2d100.20418355348497!3d64.27524528455375!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ca2bca49045b1a5%3A0xed55e495f1ebe43d!2z0JrRgNCw0YHQvdC-0Y_RgNGB0LrQsNGPINGD0LsuLCAyLCDQotGD0YDQsCwg0JrRgNCw0YHQvdC-0Y_RgNGB0LrQuNC5INC60YDQsNC5LCA2NDgwMDA!5e0!3m2!1sru!2sru!4v1765371779443!5m2!1sru!2sru" width="600" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="about-content">
+                <h3>Как нас найти?</h3>
+                <p>Вход со стороны ул. Тверская, через парковку, по соседству с рестораном магазин "Пятерочка" и парикмахерский салон "Дюймовочка Luxe". Ресторан оборудован сплит-системой, гардеробом, уборной, панорамными окнами и вторым этажом с выходом на терассу.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Призыв к действию -->
+    <section class="reservation" style="margin-top: 40px;">
+        <div class="container" style="text-align: center;">
+            <h2 style="color: white; margin-bottom: 20px;">Готовы забронировать стол?</h2>
+            <p style="color: #ddd; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto;">Забронируйте стол онлайн прямо сейчас и получите бокал вина в подарок!</p>
+            <a href="booking.html" class="cta-button" style="font-size: 1.2rem; padding: 15px 40px;">Перейти к бронированию</a>
+        </div>
+    </section>
+    
+    <!-- Футер -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Intensso</h3>
+                    <p>Ресторан итальянской кухни премиум-класса в центре Москвы. Насладитесь аутентичными блюдами и изысканной атмосферой.</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Быстрые ссылки</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html#menu">Меню</a></li>
+                        <li><a href="booking.html">Бронирование</a></li>
+                        <li><a href="index.html#about">О нас</a></li>
+                        <li><a href="index.html#contact">Контакты</a></li>
+                        <li><a href="careers.html">Вакансии</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Социальные сети</h3>
+                    <ul class="footer-links">
+                        <li><a href="http://192.168.0.1" target="_blank">Instagram</a></li>
+                        <li><a href="https://facebook.com/intensso" target="_blank">Facebook</a></li>
+                        <li><a href="https://t.me/intensso" target="_blank">Telegram</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; <span id="year">2023</span> Ресторан Intensso. Все права защищены.</p>
+                <p style="font-size: 0.8rem; margin-top: 10px;">Режим работы: ежедневно с 12:00 до 23:00</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Модальное окно -->
+    <div class="modal" id="success-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">Спасибо за заказ!</h3>
+            <p>Ваш заказ "<span id="ordered-item"></span>" принят. Ожидайте подтверждения по телефону.</p>
+            <p>Номер заказа: #<span id="order-id">0000</span></p>
+            <button class="order-button" onclick="closeModal()">Закрыть</button>
+        </div>
+    </div>
+
+    <script>
+        // Обработка заказа блюда
+        function orderItem(name, price) {
+            document.getElementById('ordered-item').textContent = name;
+            document.getElementById('order-id').textContent = Math.floor(Math.random() * 10000);
+            document.getElementById('success-modal').style.display = 'flex';
+        }
+        
+        // Закрытие модального окна
+        function closeModal() {
+            document.getElementById('success-modal').style.display = 'none';
+        }
+        
+        // Открытие карты
+        function openMap() {
+            window.open('https://maps.google.com/?q=Москва,ул.Тверская,д.10', '_blank');
+        }
+        
+        // Отправка сообщения
+        function sendMessage() {
+            window.location.href = 'mailto:info@intensso.ru?subject=Вопрос о ресторане Intensso';
+        }
+        
+        // Установка текущего года
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('year').textContent = new Date().getFullYear();
+        });
+        
+        // Закрытие модального окна при клике вне его
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('success-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
