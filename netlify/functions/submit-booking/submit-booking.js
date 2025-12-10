@@ -98,14 +98,18 @@ export async function handler(event, context) {
         body: JSON.stringify({ error: 'Не удалось сохранить бронирование' }),
       };
     }
-
+    const bookingId = `BK-${data.id.toString().padStart(6, '0')}`;
     // Успех
     return {
-      statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json',
-      },
+            statusCode: 200,
+            headers,
+            body: JSON.stringify({
+                success: true,
+                message: 'Бронирование успешно создано',
+                bookingId: bookingId,
+                dbId: data.id, // Реальный ID из таблицы базы данных
+                record: data
+            }),
       body: JSON.stringify({ success: true, message: 'Бронирование успешно отправлено' }),
     };
   } catch (err) {

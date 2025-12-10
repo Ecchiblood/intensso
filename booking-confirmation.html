@@ -92,7 +92,7 @@
         </div>
     </header>
     
-    <!-- Хлебные крошки -->
+   
     <div class="container" style="margin: 20px 0;">
         <nav class="breadcrumbs">
             <a href="index.html">Главная</a> &gt; 
@@ -101,7 +101,7 @@
         </nav>
     </div>
     
-    <!-- Основной контент -->
+    <!-- main content + form with send data in database by Supabase -->
     <div class="container">
         <div class="confirmation-container">
             <div class="confirmation-icon">
@@ -199,75 +199,81 @@
     </footer>
 
     <script>
-        // Функция для получения параметров из URL
-        function getQueryParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param);
-        }
-        
-        // Функция для форматирования даты
-        function formatDate(dateString) {
-            if (!dateString) return 'Не указана';
-            
-            const date = new Date(dateString);
-            if (isNaN(date.getTime())) return dateString;
-            
-            return date.toLocaleDateString('ru-RU', {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
+                document.addEventListener('DOMContentLoaded', function() {
+                // Получаем параметры из URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const bookingId = urlParams.get('bookingId');
+                const dbId = urlParams.get('dbId'); // Реальный ID из БД
+                
+                // Получаем данные из localStorage
+                const savedData = localStorage.getItem('lastBooking');
+                let bookingData = savedData ? JSON.parse(savedData) : null;
+                
+                // Проверяем, что данные соответствуют ID из URL
+                if (bookingData && bookingData.bookingId === bookingId) {
+                    // Отображаем данные
+                    displayConfirmation(bookingData);
+                    
+                    // Можно дополнительно запросить данные из БД по dbId
+                    if (dbId) {
+                        // fetchBookingFromDB(dbId); // Опционально
+                    }
+                } else {
+                    showError();
+                }
             });
-        }
-        
-        // Функция для форматирования времени
-        function formatTime(timeString) {
-            if (!timeString) return 'Не указано';
-            
-            // Добавляем секунды, если их нет
-            if (timeString.length === 5) {
-                timeString += ':00';
+
+            function displayConfirmation(data) {
+                const formatDate = (dateStr) => {
+                    const date = new Date(dateStr);
+                    return date.toLocaleDateString('ru-RU', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                };
+                
+                // Отображаем данные, включая реальный ID из БД
+                document.getElementById('confirmation-content').innerHTML = `
+                    <div class="success-icon">✓</div>
+                    <h1>Бронирование подтверждено!</h1>
+                    
+                    <div class="booking-details">
+                        <div class="detail-item">
+                            <span class="detail-label">Номер брони:</span>
+                            <span class="detail-value">${data.bookingId}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">ID в системе:</span>
+                            <span class="detail-value">${data.dbId || 'N/A'}</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Имя:</span>
+                            <span class="detail-value">${data.name}</span>
+                        </div>
+                        <!-- остальные поля -->
+                    </div>
+                    
+                    <p><strong>Будем ждать вас ${formatDate(data.date)} в ${data.time}!</strong></p>
+                    <p>Подтверждение отправлено на ${data.email}</p>
+                `;
             }
-            
-            const [hours, minutes] = timeString.split(':');
-            return `${hours}:${minutes}`;
-        }
-        
-        // Заполнение данных из URL параметров
-        document.addEventListener('DOMContentLoaded', function() {
-            // Получаем данные из URL
-            const name = getQueryParam('name') || 'Гость';
-            const date = getQueryParam('date');
-            const time = getQueryParam('time');
-            const guests = getQueryParam('guests') || '2';
-            const phone = getQueryParam('phone') || 'Не указан';
-            const email = getQueryParam('email') || 'example@email.com';
-            
-            // Заполняем поля на странице
-            document.getElementById('confirm-name').textContent = name;
-            document.getElementById('confirm-date').textContent = formatDate(date);
-            document.getElementById('confirm-time').textContent = formatTime(time);
-            document.getElementById('confirm-guests').textContent = guests;
-            document.getElementById('confirm-phone').textContent = phone;
-            document.getElementById('confirm-email').textContent = email;
-            
-            // Особое сообщение с датой и временем
-            document.getElementById('waiting-date').textContent = formatDate(date);
-            document.getElementById('waiting-time').textContent = formatTime(time);
-            
-            // Генерация случайного ID бронирования
-            const bookingId = Math.floor(Math.random() * 1000000);
-            document.getElementById('booking-id').textContent = bookingId;
-            
-            // Установка текущего года
-            document.getElementById('year').textContent = new Date().getFullYear();
-            
-            // Если дата не указана, показываем общее сообщение
-            if (!date) {
-                document.getElementById('waiting-date').textContent = 'указанную дату';
-                document.getElementById('waiting-time').textContent = 'указанное время';
+
+            // Опционально: функция для получения данных из БД по ID
+            async function fetchBookingFromDB(dbId) {
+                try {
+                    const response = await fetch(`/.netlify/functions/get-booking?id=${dbId}`);
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        console.log('Данные из БД:', result.data);
+                        // Можно обновить данные на странице
+                    }
+                } catch (error) {
+                    console.error('Ошибка получения данных из БД:', error);
+                }
             }
-        });
         
         // Отправка напоминания
         function sendReminder() {

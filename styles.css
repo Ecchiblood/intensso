@@ -151,7 +151,7 @@ nav ul li a.active {
 .menu-item-image {
     height: 200px;
     background-color: #eee;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
     color: #666;
@@ -193,6 +193,13 @@ nav ul li a.active {
     cursor: pointer;
     font-weight: bold;
     transition: background-color 0.3s;
+}
+
+.order-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background-color: #cccccc;
+    color: #666666;
 }
 
 .order-button:hover {

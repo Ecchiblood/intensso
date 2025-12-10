@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Хедер -->
+   
     <header>
         <div class="container header-content">
             <a href="index.html" class="logo">Intens<span>so</span></a>
@@ -23,7 +23,7 @@
         </div>
     </header>
     
-    <!-- Герой секция -->
+    <!-- descrition -->
     <section class="hero">
         <div class="container">
             <h1>Искусство итальянской кухни</h1>
@@ -33,7 +33,7 @@
         </div>
     </section>
     
-    <!-- О нас -->
+    <!--history-->
     <div class="container">
         <h2 class="section-title" id="about">О ресторане</h2>
         
@@ -50,15 +50,15 @@
         </div>
     </div>
     
-    <!-- Меню -->
+   <!--menu-->
     <div class="container">
         <h2 class="section-title" id="menu">Наше меню</h2>
         
         <div class="menu-grid">
-            <!-- Первое блюдо -->
+            
             <div class="menu-item">
                 <div class="menu-item-image" aria-label="Паста Карбонара">
-                    🍝
+                    <img src="images\carbonara.png" height="380" alt="Паста Карбонара">
                 </div>
                 <div class="menu-item-content">
                     <div class="menu-item-title">
@@ -66,14 +66,14 @@
                         <span class="menu-item-price">890 ₽</span>
                     </div>
                     <p>Классическая паста с гуанчиале, яйцами, сыром пекорино и черным перцем.</p>
-                    <button class="order-button" onclick="orderItem('Паста Карбонара', 890)">Заказать</button>
+                    <button class="order-button" onclick="orderItem('Паста Карбонара', 890)" disabled>Заказать</button>
                 </div>
             </div>
             
-            <!-- Второе блюдо -->
+            
             <div class="menu-item">
                 <div class="menu-item-image" aria-label="Пицца Маргарита">
-                    🍕
+                    <img src="https://static.tildacdn.com/tild6164-6239-4561-a130-376437623033/_.png">
                 </div>
                 <div class="menu-item-content">
                     <div class="menu-item-title">
@@ -81,14 +81,14 @@
                         <span class="menu-item-price">950 ₽</span>
                     </div>
                     <p>Тонкое тесто, соус из свежих томатов, моцарелла и базилик.</p>
-                    <button class="order-button" onclick="orderItem('Пицца Маргарита', 950)">Заказать</button>
+                    <button class="order-button" onclick="orderItem('Пицца Маргарита', 950)" disabled>Заказать</button>
                 </div>
             </div>
             
-            <!-- Третье блюдо -->
+           
             <div class="menu-item">
                 <div class="menu-item-image" aria-label="Филе-миньон">
-                    🥩
+                    <img src="images\minion.jpg" height="380" alt="Филе Миньон">
                 </div>
                 <div class="menu-item-content">
                     <div class="menu-item-title">
@@ -96,14 +96,14 @@
                         <span class="menu-item-price">1850 ₽</span>
                     </div>
                     <p>Говяжья вырезка с трюфельным пюре и овощами гриль.</p>
-                    <button class="order-button" onclick="orderItem('Филе-миньон', 1850)">Заказать</button>
+                    <button class="order-button" onclick="orderItem('Филе-миньон', 1850)" disabled>Заказать</button>
                 </div>
             </div>
             
-            <!-- Четвертое блюдо -->
+            
             <div class="menu-item">
                 <div class="menu-item-image" aria-label="Тирамису">
-                    🍰
+                    <img src="images\tiramisu.png" height="380" alt="Тирамису">
                 </div>
                 <div class="menu-item-content">
                     <div class="menu-item-title">
@@ -111,14 +111,14 @@
                         <span class="menu-item-price">650 ₽</span>
                     </div>
                     <p>Классический итальянский десерт с маскарпоне и кофе.</p>
-                    <button class="order-button" onclick="orderItem('Тирамису', 650)">Заказать</button>
+                    <button class="order-button" onclick="orderItem('Тирамису', 650)" disabled>Заказать</button>
                 </div>
             </div>
             
-            <!-- Пятое блюдо -->
+           
             <div class="menu-item">
                 <div class="menu-item-image" aria-label="Равиоли с трюфелем">
-                    🍝
+                    <img src="images\raviolly.png" height="380" alt="Равиолли">
                 </div>
                 <div class="menu-item-content">
                     <div class="menu-item-title">
@@ -126,14 +126,14 @@
                         <span class="menu-item-price">1200 ₽</span>
                     </div>
                     <p>Домашние равиоли с начинкой из рикотты и трюфельным соусом.</p>
-                    <button class="order-button" onclick="orderItem('Равиоли с трюфелем', 1200)">Заказать</button>
+                    <button class="order-button" onclick="orderItem('Равиоли с трюфелем', 1200)" disabled>Заказать</button>
                 </div>
             </div>
             
-            <!-- Шестое блюдо -->
+           
             <div class="menu-item">
                 <div class="menu-item-image" aria-label="Салат Капрезе">
-                    🥗
+                    <img src="images\kaprese.png" height="380" alt="Салат">
                 </div>
                 <div class="menu-item-content">
                     <div class="menu-item-title">
@@ -141,7 +141,7 @@
                         <span class="menu-item-price">750 ₽</span>
                     </div>
                     <p>Свежие томаты, моцарелла, базилик и оливковое масло.</p>
-                    <button class="order-button" onclick="orderItem('Салат Капрезе', 750)">Заказать</button>
+                    <button class="order-button" onclick="orderItem('Салат Капрезе', 750)" disabled>Заказать</button>
                 </div>
             </div>
         </div>
@@ -151,7 +151,7 @@
         </div>
     </div>
     
-    <!-- Контакты -->
+    <!-- contacts -->
     <div class="container">
         <h2 class="section-title" id="contact">Контакты</h2>
         
@@ -181,14 +181,31 @@
             </div>
         </div>
         
-        <!-- Карта -->
-        <div style="margin: 40px 0; text-align: center;">
-            <div style="height: 300px; background-color: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #666;">
+        <!-- map -->
+        <!-- <div class="about-section">
+            <div style="background-color: #eee; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #666">
                 <div>
-                    <div style="font-size: 3rem;">🗺️</div>
-                    <p>Карта загружена</p>
+                    <div>
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1456.2426167811054!2d100.20418355348497!3d64.27524528455375!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ca2bca49045b1a5%3A0xed55e495f1ebe43d!2z0JrRgNCw0YHQvdC-0Y_RgNGB0LrQsNGPINGD0LsuLCAyLCDQotGD0YDQsCwg0JrRgNCw0YHQvdC-0Y_RgNGB0LrQuNC5INC60YDQsNC5LCA2NDgwMDA!5e0!3m2!1sru!2sru!4v1765371779443!5m2!1sru!2sru" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
                     <p>Москва, ул. Тверская, д. 10</p>
                 </div>
+                <div style="margin: 10px">
+                    <p style="font-size: 20px"><b>Как нас найти?</b></p>
+                    <p style="font-size: 16px">Вход со стороны ул. Тверская, через парковку, по соседству с рестораном магазин "Пятерочка" и парикмахерский салон "Дюймовочка Luxe". Ресторан оборудован сплит-системой, гардеробом, уборной, панорамными окнами и вторым этажом с выходом на терассу</p>
+                </div>
+            </div>
+        </div>
+    </div> -->
+    <div class="container">
+        <h2 class="section-title" id="about">О ресторане</h2>
+        <div class="about-section" style="border: 10px">
+            <div class="about-image">
+                  <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1456.2426167811054!2d100.20418355348497!3d64.27524528455375!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x5ca2bca49045b1a5%3A0xed55e495f1ebe43d!2z0JrRgNCw0YHQvdC-0Y_RgNGB0LrQsNGPINGD0LsuLCAyLCDQotGD0YDQsCwg0JrRgNCw0YHQvdC-0Y_RgNGB0LrQuNC5INC60YDQsNC5LCA2NDgwMDA!5e0!3m2!1sru!2sru!4v1765371779443!5m2!1sru!2sru" width="600" height="400" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            <div class="about-content">
+                <h3>Как нас найти?</h3>
+                <p>Вход со стороны ул. Тверская, через парковку, по соседству с рестораном магазин "Пятерочка" и парикмахерский салон "Дюймовочка Luxe". Ресторан оборудован сплит-системой, гардеробом, уборной, панорамными окнами и вторым этажом с выходом на терассу.</p>
             </div>
         </div>
     </div>
@@ -225,7 +242,7 @@
                 <div class="footer-section">
                     <h3>Социальные сети</h3>
                     <ul class="footer-links">
-                        <li><a href="https://instagram.com/intensso_rest" target="_blank">Instagram</a></li>
+                        <li><a href="http://192.168.0.1" target="_blank">Instagram</a></li>
                         <li><a href="https://facebook.com/intensso" target="_blank">Facebook</a></li>
                         <li><a href="https://t.me/intensso" target="_blank">Telegram</a></li>
                     </ul>

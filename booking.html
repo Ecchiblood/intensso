@@ -303,9 +303,24 @@
 
                 const result = await response.json();
 
-                if (response.ok) {
-                    // Успешно → переходим на страницу подтверждения
-                    window.location.href = 'booking-confirmation.html';
+                if (response.ok && result.success) {
+            // ✅ Получаем РЕАЛЬНЫЙ ID из таблицы базы данных!
+                    const dbId = result.dbId; // id из колонки bookings.id
+                    const bookingId = result.bookingId; // Форматированный ID (например, BK-000123)
+                    
+                    // Сохраняем все данные в localStorage
+                    const bookingData = {
+                        ...formData,
+                        bookingId: bookingId,
+                        dbId: dbId, // Сохраняем реальный ID из БД
+                        timestamp: new Date().toISOString(),
+                        status: 'confirmed'
+                    };
+                    
+                    localStorage.setItem('lastBooking', JSON.stringify(bookingData));
+                    
+                    // Переходим на страницу подтверждения с реальным ID
+                    window.location.href = `booking-confirmation.html?bookingId=${bookingId}&dbId=${dbId}`;
                 } else {
                     alert('Ошибка: ' + (result.error || 'Не удалось отправить бронирование.'));
                 }
